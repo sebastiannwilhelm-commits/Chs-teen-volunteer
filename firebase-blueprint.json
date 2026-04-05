@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A teen volunteer user profile.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["volunteer", "admin"] },
+        "completedHours": { "type": "number" },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "pastOrganizations": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["uid", "name", "email", "role", "completedHours"]
+    },
+    "Organization": {
+      "title": "Organization",
+      "description": "A non-profit organization.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "mission": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "website": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "mission", "contactEmail"]
+    },
+    "Opportunity": {
+      "title": "Opportunity",
+      "description": "A volunteer opportunity.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "organizationId": { "type": "string" },
+        "organizationName": { "type": "string" },
+        "category": { "type": "string" },
+        "ageRequirement": { "type": "string" },
+        "location": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "timeCommitment": { "type": "string" },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "title", "organizationId", "organizationName", "category", "date", "location", "description"]
+    },
+    "Registration": {
+      "title": "Registration",
+      "description": "A user's registration for an opportunity.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "opportunityId": { "type": "string" },
+        "status": { "type": "string", "enum": ["registered", "completed", "cancelled"] },
+        "hoursAwarded": { "type": "number" }
+      },
+      "required": ["id", "userId", "opportunityId", "status", "hoursAwarded"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles."
+    },
+    "/organizations/{orgId}": {
+      "schema": { "$ref": "#/entities/Organization" },
+      "description": "Non-profit organizations."
+    },
+    "/opportunities/{oppId}": {
+      "schema": { "$ref": "#/entities/Opportunity" },
+      "description": "Volunteer opportunities."
+    },
+    "/registrations/{regId}": {
+      "schema": { "$ref": "#/entities/Registration" },
+      "description": "User registrations for opportunities."
+    }
+  }
+}
