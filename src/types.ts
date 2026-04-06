@@ -42,3 +42,21 @@ export interface Registration {
   status: 'registered' | 'completed' | 'cancelled';
   hoursAwarded: number;
 }
+
+export interface Conversation {
+  id: string;
+  participants: string[];
+  participantNames: Record<string, string>;
+  participantEmails: Record<string, string>;
+  lastMessage: string;
+  lastMessageAt: { seconds: number; nanoseconds: number } | null;
+  unreadCounts: Record<string, number>;
+}
+
+export interface Message {
+  id: string;
+  senderId: string;
+  senderName: string;
+  text: string;
+  createdAt: { seconds: number; nanoseconds: number } | null;
+}
