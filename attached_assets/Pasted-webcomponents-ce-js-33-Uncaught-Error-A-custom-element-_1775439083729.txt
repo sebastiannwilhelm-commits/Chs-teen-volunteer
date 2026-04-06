@@ -1,0 +1,50 @@
+webcomponents-ce.js:33 Uncaught Error: A custom element with name 'mce-autosize-textarea' has already been defined.
+    at Aa (webcomponents-ce.js:33:363)
+    at m.define (webcomponents-ce.js:33:133)
+    at overlay_bundle.js:149:5562
+    at C (overlay_bundle.js:45:682)
+    at overlay_bundle.js:160:392
+Aa @ webcomponents-ce.js:33
+m.define @ webcomponents-ce.js:33
+(anonymous) @ overlay_bundle.js:149
+C @ overlay_bundle.js:45
+(anonymous) @ overlay_bundle.js:160
+favicon.ico:1  Failed to load resource: the server responded with a status of 404 ()
+index-D8kz0Ws2.js:1459 Cross-Origin-Opener-Policy policy would block the window.closed call.
+t @ index-D8kz0Ws2.js:1459
+index-D8kz0Ws2.js:1459 Cross-Origin-Opener-Policy policy would block the window.closed call.
+t @ index-D8kz0Ws2.js:1459
+index-D8kz0Ws2.js:1459 Cross-Origin-Opener-Policy policy would block the window.closed call.
+t @ index-D8kz0Ws2.js:1459
+index-D8kz0Ws2.js:1459 Cross-Origin-Opener-Policy policy would block the window.closed call.
+t @ index-D8kz0Ws2.js:1459
+index-D8kz0Ws2.js:1579 Cross-Origin-Opener-Policy policy would block the window.close call.
+close @ index-D8kz0Ws2.js:1579
+cleanUp @ index-D8kz0Ws2.js:1459
+unregisterAndCleanUp @ index-D8kz0Ws2.js:1444
+resolve @ index-D8kz0Ws2.js:1444
+onAuthEvent @ index-D8kz0Ws2.js:1444
+index-D8kz0Ws2.js:1579 Cross-Origin-Opener-Policy policy would block the window.close call.
+close @ index-D8kz0Ws2.js:1579
+cleanUp @ index-D8kz0Ws2.js:1459
+unregisterAndCleanUp @ index-D8kz0Ws2.js:1444
+resolve @ index-D8kz0Ws2.js:1444
+onAuthEvent @ index-D8kz0Ws2.js:1444
+index-D8kz0Ws2.js:1459 Cross-Origin-Opener-Policy policy would block the window.closed call.
+t @ index-D8kz0Ws2.js:1459
+index-D8kz0Ws2.js:1459 Cross-Origin-Opener-Policy policy would block the window.closed call.
+t @ index-D8kz0Ws2.js:1459
+index-D8kz0Ws2.js:1579 Cross-Origin-Opener-Policy policy would block the window.close call.
+close @ index-D8kz0Ws2.js:1579
+cleanUp @ index-D8kz0Ws2.js:1459
+unregisterAndCleanUp @ index-D8kz0Ws2.js:1444
+resolve @ index-D8kz0Ws2.js:1444
+onAuthEvent @ index-D8kz0Ws2.js:1444
+index-D8kz0Ws2.js:1579 Cross-Origin-Opener-Policy policy would block the window.close call.
+close @ index-D8kz0Ws2.js:1579
+cleanUp @ index-D8kz0Ws2.js:1459
+unregisterAndCleanUp @ index-D8kz0Ws2.js:1444
+resolve @ index-D8kz0Ws2.js:1444
+onAuthEvent @ index-D8kz0Ws2.js:1444
+index-D8kz0Ws2.js:3394 Uncaught (in promise) FirebaseError: Failed to get document because the client is offline.
+index-D8kz0Ws2.js:3394 Uncaught (in promise) FirebaseError: Failed to get document because the client is offline.

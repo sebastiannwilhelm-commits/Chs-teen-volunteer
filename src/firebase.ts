@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
@@ -17,22 +17,13 @@ export const isInIframe = () => {
   }
 };
 
+// Always use redirect — popup is blocked by Cross-Origin-Opener-Policy headers on the deployed site
+// The iframe case is handled in the Navbar (Sign In ↗ opens a new tab first)
 export const signInWithGoogle = async () => {
   try {
-    // Popup works in a normal browser tab (deployed site, new tab)
-    await signInWithPopup(auth, googleProvider);
-  } catch (error: any) {
-    if (
-      error.code === 'auth/popup-blocked' ||
-      error.code === 'auth/popup-closed-by-user' ||
-      error.code === 'auth/cancelled-popup-request'
-    ) {
-      // Fallback to redirect when popup is blocked
-      await signInWithRedirect(auth, googleProvider);
-    } else {
-      console.error('Sign-in error:', error);
-      throw error;
-    }
+    await signInWithRedirect(auth, googleProvider);
+  } catch (error) {
+    console.error('Sign-in error:', error);
   }
 };
 
