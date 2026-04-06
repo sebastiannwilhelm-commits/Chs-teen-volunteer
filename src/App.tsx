@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Anchor, LogOut, User as UserIcon, MessageSquare } from 'lucide-react';
+import { Anchor, LogOut, User as UserIcon, MessageSquare, ChevronUp } from 'lucide-react';
 import { auth, signInWithGoogle, logOut, db, getRedirectResult } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
@@ -71,6 +71,86 @@ function Navbar({ user, profile, unreadCount }: NavbarProps) {
         </div>
       </div>
     </nav>
+  );
+}
+
+const APP_VERSION = '1.0.0';
+
+const CHANGELOG = [
+  {
+    version: '1.0.0',
+    date: 'April 2026',
+    changes: [
+      'In-app messaging between volunteers',
+      'Favorite / save opportunities',
+      'Google Calendar integration',
+      'Real-time Firestore data sync',
+      'User profiles with interests & hours tracking',
+    ],
+  },
+];
+
+function Footer() {
+  const [showChangelog, setShowChangelog] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setShowChangelog(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  return (
+    <footer className="bg-white border-t border-slate-200 py-10 mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex items-center gap-2">
+          <Anchor className="w-6 h-6 text-brand-500" />
+          <span className="font-display font-bold text-xl text-slate-900">
+            CHS Teen VolunHub
+          </span>
+        </div>
+
+        <p className="text-slate-500 text-sm text-center md:text-left">
+          © {new Date().getFullYear()} Charleston Teen Volunteer Hub. Made for the Lowcountry.
+        </p>
+
+        <div className="relative" ref={ref}>
+          <button
+            onClick={() => setShowChangelog(v => !v)}
+            className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-brand-600 transition-colors border border-slate-200 hover:border-brand-300 px-3 py-1.5 rounded-full"
+          >
+            v{APP_VERSION}
+            <ChevronUp className={`w-3 h-3 transition-transform ${showChangelog ? '' : 'rotate-180'}`} />
+          </button>
+
+          {showChangelog && (
+            <div className="absolute bottom-10 right-0 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-5 z-50">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">What's New</p>
+              {CHANGELOG.map(entry => (
+                <div key={entry.version}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-slate-900 text-sm">v{entry.version}</span>
+                    <span className="text-xs text-slate-400">{entry.date}</span>
+                  </div>
+                  <ul className="space-y-1.5">
+                    {entry.changes.map((change, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-slate-600">
+                        <span className="text-brand-500 font-bold mt-0.5">✓</span>
+                        {change}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </footer>
   );
 }
 
@@ -152,19 +232,7 @@ export default function App() {
           </Routes>
         </div>
 
-        <footer className="bg-white border-t border-slate-200 py-12 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Anchor className="w-6 h-6 text-brand-500" />
-              <span className="font-display font-bold text-xl text-slate-900">
-                CHS Teen VolunHub
-              </span>
-            </div>
-            <p className="text-slate-500 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} Charleston Teen Volunteer Hub. Made for the Lowcountry.
-            </p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </BrowserRouter>
   );
