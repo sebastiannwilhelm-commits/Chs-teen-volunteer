@@ -20,11 +20,19 @@ export default function Profile({ user, profile, setProfile }: ProfileProps) {
   const [editName, setEditName] = useState(profile?.name || '');
   const [editInterests, setEditInterests] = useState<string[]>(profile?.interests || []);
 
-  if (!user || !profile) {
+  if (!user) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <h2 className="text-2xl font-bold text-slate-900 mb-4">Please sign in to view your profile</h2>
         <p className="text-slate-600">Track your hours, manage interests, and see your impact.</p>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-500"></div>
       </div>
     );
   }

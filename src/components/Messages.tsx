@@ -183,12 +183,20 @@ export default function Messages({ user, profile }: MessagesProps) {
     }
   };
 
-  if (!user || !profile) {
+  if (!user) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <MessageSquare className="w-12 h-12 text-slate-300 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Sign in to view messages</h2>
         <p className="text-slate-500">Connect with other volunteers and coordinate your efforts.</p>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-500"></div>
       </div>
     );
   }
