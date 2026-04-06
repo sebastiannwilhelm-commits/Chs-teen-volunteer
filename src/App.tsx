@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Anchor, LogOut, User as UserIcon, MessageSquare } from 'lucide-react';
-import { auth, signInWithGoogle, logOut, db } from './firebase';
+import { auth, signInWithGoogle, logOut, db, getRedirectResult } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { UserProfile } from './types';
@@ -79,6 +79,13 @@ export default function App() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    // Handle redirect sign-in result when returning from Google OAuth
+    getRedirectResult(auth).catch((err) => {
+      console.error('Redirect result error:', err);
+    });
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
