@@ -83,9 +83,17 @@ function Navbar({ user, profile, unreadCount }: NavbarProps) {
   );
 }
 
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.0.2';
 
 const CHANGELOG = [
+  {
+    version: '1.0.2',
+    date: 'April 2026',
+    changes: [
+      'Sign In button now opens a new tab when inside Replit preview',
+      'Google popup sign-in works correctly on the deployed site',
+    ],
+  },
   {
     version: '1.0.1',
     date: 'April 2026',
