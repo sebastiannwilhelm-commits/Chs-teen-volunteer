@@ -74,9 +74,17 @@ function Navbar({ user, profile, unreadCount }: NavbarProps) {
   );
 }
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 
 const CHANGELOG = [
+  {
+    version: '1.0.1',
+    date: 'April 2026',
+    changes: [
+      'Fixed Google sign-in popup disappearing',
+      'Improved auth error messages',
+    ],
+  },
   {
     version: '1.0.0',
     date: 'April 2026',
@@ -130,8 +138,8 @@ function Footer() {
           {showChangelog && (
             <div className="absolute bottom-10 right-0 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-5 z-50">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">What's New</p>
-              {CHANGELOG.map(entry => (
-                <div key={entry.version}>
+              {CHANGELOG.map((entry, idx) => (
+                <div key={entry.version} className={idx > 0 ? 'mt-4 pt-4 border-t border-slate-100' : ''}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-slate-900 text-sm">v{entry.version}</span>
                     <span className="text-xs text-slate-400">{entry.date}</span>
