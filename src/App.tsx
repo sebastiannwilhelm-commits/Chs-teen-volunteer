@@ -206,12 +206,29 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        const userRef = doc(db, 'users', currentUser.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          setProfile(userSnap.data() as UserProfile);
-        } else {
-          const newProfile: UserProfile = {
+        try {
+          const userRef = doc(db, 'users', currentUser.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            setProfile(userSnap.data() as UserProfile);
+          } else {
+            const newProfile: UserProfile = {
+              uid: currentUser.uid,
+              name: currentUser.displayName || 'Volunteer',
+              email: currentUser.email || '',
+              role: 'volunteer',
+              completedHours: 0,
+              interests: [],
+              pastOrganizations: [],
+              favorites: []
+            };
+            await setDoc(userRef, newProfile);
+            setProfile(newProfile);
+          }
+        } catch (err) {
+          console.error('Error loading profile:', err);
+          // Set a fallback profile so the app doesn't stay stuck on the spinner
+          setProfile({
             uid: currentUser.uid,
             name: currentUser.displayName || 'Volunteer',
             email: currentUser.email || '',
@@ -220,9 +237,7 @@ export default function App() {
             interests: [],
             pastOrganizations: [],
             favorites: []
-          };
-          await setDoc(userRef, newProfile);
-          setProfile(newProfile);
+          });
         }
       } else {
         setProfile(null);
