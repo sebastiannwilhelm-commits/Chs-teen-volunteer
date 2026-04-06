@@ -1,0 +1,41 @@
+webcomponents-ce.js:33 Uncaught Error: A custom element with name 'mce-autosize-textarea' has already been defined.
+    at Aa (webcomponents-ce.js:33:363)
+    at m.define (webcomponents-ce.js:33:133)
+    at overlay_bundle.js:149:5562
+    at C (overlay_bundle.js:45:682)
+    at overlay_bundle.js:160:392
+Aa @ webcomponents-ce.js:33
+m.define @ webcomponents-ce.js:33
+(anonymous) @ overlay_bundle.js:149
+C @ overlay_bundle.js:45
+(anonymous) @ overlay_bundle.js:160
+/favicon.ico:1  Failed to load resource: the server responded with a status of 404 ()
+index-D8kz0Ws2.js:3384 Sign-in error: FirebaseError: Firebase: Error (auth/unauthorized-domain).
+    at Zy (index-D8kz0Ws2.js:649:728)
+    at is (index-D8kz0Ws2.js:649:30)
+    at kP (index-D8kz0Ws2.js:1534:197)
+GL @ index-D8kz0Ws2.js:3384
+index-D8kz0Ws2.js:649 Uncaught (in promise) FirebaseError: Firebase: Error (auth/unauthorized-domain).
+    at Zy (index-D8kz0Ws2.js:649:728)
+    at is (index-D8kz0Ws2.js:649:30)
+    at kP (index-D8kz0Ws2.js:1534:197)
+iframe.js:311 Info: The current domain is not authorized for OAuth operations. This will prevent signInWithPopup, signInWithRedirect, linkWithPopup and linkWithRedirect from working. Add your domain (nextgen-impact.com) to the OAuth redirect domains list in the Firebase console -> Authentication -> Settings -> Authorized domains tab.
+kl @ iframe.js:311
+index-D8kz0Ws2.js:3384 Sign-in error: FirebaseError: Firebase: Error (auth/unauthorized-domain).
+    at Zy (index-D8kz0Ws2.js:649:728)
+    at is (index-D8kz0Ws2.js:649:30)
+    at kP (index-D8kz0Ws2.js:1534:197)
+GL @ index-D8kz0Ws2.js:3384
+index-D8kz0Ws2.js:649 Uncaught (in promise) FirebaseError: Firebase: Error (auth/unauthorized-domain).
+    at Zy (index-D8kz0Ws2.js:649:728)
+    at is (index-D8kz0Ws2.js:649:30)
+    at kP (index-D8kz0Ws2.js:1534:197)
+index-D8kz0Ws2.js:3384 Sign-in error: FirebaseError: Firebase: Error (auth/unauthorized-domain).
+    at Zy (index-D8kz0Ws2.js:649:728)
+    at is (index-D8kz0Ws2.js:649:30)
+    at kP (index-D8kz0Ws2.js:1534:197)
+GL @ index-D8kz0Ws2.js:3384
+index-D8kz0Ws2.js:649 Uncaught (in promise) FirebaseError: Firebase: Error (auth/unauthorized-domain).
+    at Zy (index-D8kz0Ws2.js:649:728)
+    at is (index-D8kz0Ws2.js:649:30)
+    at kP (index-D8kz0Ws2.js:1534:197)
