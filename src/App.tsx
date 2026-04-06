@@ -83,9 +83,17 @@ function Navbar({ user, profile, unreadCount }: NavbarProps) {
   );
 }
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.0.3';
 
 const CHANGELOG = [
+  {
+    version: '1.0.3',
+    date: 'April 2026',
+    changes: [
+      'Enabled offline data caching — app works even with poor connectivity',
+      'Fixed infinite loading spinner on slow connections',
+    ],
+  },
   {
     version: '1.0.2',
     date: 'April 2026',
