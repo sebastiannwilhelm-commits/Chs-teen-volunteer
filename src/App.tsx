@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Anchor, LogOut, User as UserIcon, MessageSquare, ChevronUp } from 'lucide-react';
-import { auth, signInWithGoogle, logOut, db, getRedirectResult } from './firebase';
+import { auth, signInWithGoogle, logOut, db, getRedirectResult, isInIframe } from './firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc, setDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { UserProfile } from './types';
@@ -63,6 +63,15 @@ function Navbar({ user, profile, unreadCount }: NavbarProps) {
                 <LogOut className="w-4 h-4" />
               </button>
             </>
+          ) : isInIframe() ? (
+            <a
+              href={window.location.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors"
+            >
+              Sign In ↗
+            </a>
           ) : (
             <button onClick={signInWithGoogle} className="bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors">
               Sign In
