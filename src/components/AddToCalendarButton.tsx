@@ -1,11 +1,40 @@
 import React, { useState } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
-import { CalendarPlus, Loader2 } from 'lucide-react';
+import { CalendarPlus, CheckCircle, Loader2 } from 'lucide-react';
 import { Opportunity } from '../types';
 
 interface Props {
   opportunity: Opportunity;
   className?: string;
+}
+
+function parseEndTime(startDate: Date, timeCommitment: string): Date {
+  const fallback = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+
+  if (timeCommitment.includes('hours')) {
+    const hours = parseInt(timeCommitment);
+    if (!isNaN(hours)) {
+      return new Date(startDate.getTime() + hours * 60 * 60 * 1000);
+    }
+  } else if (timeCommitment.includes('-')) {
+    const parts = timeCommitment.split('-');
+    if (parts.length === 2) {
+      const endStr = parts[1].trim();
+      const match = endStr.match(/^(\d{1,2}):(\d{2})(AM|PM)$/i);
+      if (match) {
+        let hours = parseInt(match[1]);
+        const minutes = parseInt(match[2]);
+        const meridiem = match[3].toUpperCase();
+        if (meridiem === 'PM' && hours !== 12) hours += 12;
+        if (meridiem === 'AM' && hours === 12) hours = 0;
+        const end = new Date(startDate);
+        end.setHours(hours, minutes, 0, 0);
+        if (end > startDate) return end;
+      }
+    }
+  }
+
+  return fallback;
 }
 
 export default function AddToCalendarButton({ opportunity, className = '' }: Props) {
@@ -19,28 +48,9 @@ export default function AddToCalendarButton({ opportunity, className = '' }: Pro
       try {
         setIsAdding(true);
         setError(null);
-        
-        // Parse the start date
+
         const startDate = new Date(opportunity.date);
-        
-        // Estimate end date based on timeCommitment (e.g., "4 hours" or "12:00PM - 1:00PM")
-        // For simplicity, we'll just add 2 hours if we can't parse it exactly
-        let endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-        
-        if (opportunity.timeCommitment.includes('hours')) {
-          const hours = parseInt(opportunity.timeCommitment);
-          if (!isNaN(hours)) {
-            endDate = new Date(startDate.getTime() + hours * 60 * 60 * 1000);
-          }
-        } else if (opportunity.timeCommitment.includes('-')) {
-          // Try to parse "12:00PM - 1:00PM"
-          const parts = opportunity.timeCommitment.split('-');
-          if (parts.length === 2) {
-            // Just a rough estimation for the end time
-            // We'll just use the start date + 2 hours as a fallback if parsing is complex
-            // A more robust parser could be added here
-          }
-        }
+        const endDate = parseEndTime(startDate, opportunity.timeCommitment);
 
         const event = {
           summary: opportunity.title,
@@ -79,8 +89,8 @@ export default function AddToCalendarButton({ opportunity, className = '' }: Pro
         setIsAdding(false);
       }
     },
-    onError: (error) => {
-      console.error('Login Failed:', error);
+    onError: (err) => {
+      console.error('Login Failed:', err);
       setError('Authentication failed');
       setTimeout(() => setError(null), 3000);
     }
@@ -91,8 +101,8 @@ export default function AddToCalendarButton({ opportunity, className = '' }: Pro
       onClick={() => login()}
       disabled={isAdding || success}
       className={`flex items-center justify-center gap-2 ${className} ${
-        success 
-          ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100' 
+        success
+          ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100'
           : error
             ? 'bg-red-100 text-red-700 hover:bg-red-100'
             : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
@@ -101,7 +111,7 @@ export default function AddToCalendarButton({ opportunity, className = '' }: Pro
       {isAdding ? (
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : success ? (
-        <CalendarPlus className="w-4 h-4" />
+        <CheckCircle className="w-4 h-4" />
       ) : (
         <CalendarPlus className="w-4 h-4" />
       )}

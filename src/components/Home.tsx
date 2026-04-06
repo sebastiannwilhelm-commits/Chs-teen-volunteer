@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MapPin, Clock, Users, Search, ChevronRight, Anchor, Heart, Leaf, BookOpen, Calendar as CalendarIcon } from 'lucide-react';
+import { MapPin, Clock, Users, Search, ChevronRight, Heart, Leaf, BookOpen, Calendar as CalendarIcon } from 'lucide-react';
 import { Category, Opportunity } from '../types';
 import { MOCK_OPPORTUNITIES } from '../mockData';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { format, parseISO } from 'date-fns';
+import { useSearchParams } from 'react-router-dom';
 import OpportunityModal from './OpportunityModal';
 
 const CATEGORIES: Category[] = ['All', 'Environment', 'Community', 'Animals', 'Education'];
@@ -20,24 +21,31 @@ const getIconForCategory = (category: string) => {
 };
 
 export default function Home() {
+  const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('org') || '');
   const [opportunities, setOpportunities] = useState<Opportunity[]>(MOCK_OPPORTUNITIES);
   const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'opportunities'), (snapshot) => {
-      if (!snapshot.empty) {
-        const opps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Opportunity));
-        setOpportunities(opps);
+    const unsubscribe = onSnapshot(
+      collection(db, 'opportunities'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const opps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Opportunity));
+          setOpportunities(opps);
+        }
+      },
+      (error) => {
+        console.error('Error fetching opportunities:', error);
       }
-    });
+    );
     return () => unsubscribe();
   }, []);
 
   const filteredOpportunities = opportunities.filter((opp) => {
     const matchesCategory = activeCategory === 'All' || opp.category === activeCategory;
-    const matchesSearch = opp.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    const matchesSearch = opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           opp.organizationName.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });

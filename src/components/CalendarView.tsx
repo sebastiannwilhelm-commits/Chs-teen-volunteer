@@ -22,12 +22,18 @@ export default function CalendarView() {
   const [activeOrg, setActiveOrg] = useState<string>('All');
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'opportunities'), (snapshot) => {
-      if (!snapshot.empty) {
-        const opps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Opportunity));
-        setOpportunities(opps);
+    const unsubscribe = onSnapshot(
+      collection(db, 'opportunities'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const opps = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Opportunity));
+          setOpportunities(opps);
+        }
+      },
+      (error) => {
+        console.error('Error fetching opportunities for calendar:', error);
       }
-    });
+    );
     return () => unsubscribe();
   }, []);
 

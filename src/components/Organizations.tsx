@@ -5,17 +5,25 @@ import { Organization } from '../types';
 import { MOCK_ORGANIZATIONS } from '../mockData';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
 export default function Organizations() {
   const [organizations, setOrganizations] = useState<Organization[]>(MOCK_ORGANIZATIONS);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'organizations'), (snapshot) => {
-      if (!snapshot.empty) {
-        const orgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Organization));
-        setOrganizations(orgs);
+    const unsubscribe = onSnapshot(
+      collection(db, 'organizations'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const orgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Organization));
+          setOrganizations(orgs);
+        }
+      },
+      (error) => {
+        console.error('Error fetching organizations:', error);
       }
-    });
+    );
     return () => unsubscribe();
   }, []);
 
@@ -61,7 +69,10 @@ export default function Organizations() {
                 </a>
               </div>
 
-              <button className="w-full py-3 rounded-xl bg-brand-50 text-brand-700 font-semibold text-sm hover:bg-brand-100 transition-colors flex items-center justify-center gap-2">
+              <button
+                onClick={() => navigate('/?org=' + encodeURIComponent(org.name))}
+                className="w-full py-3 rounded-xl bg-brand-50 text-brand-700 font-semibold text-sm hover:bg-brand-100 transition-colors flex items-center justify-center gap-2"
+              >
                 View Opportunities
                 <ExternalLink className="w-4 h-4" />
               </button>

@@ -50,7 +50,7 @@ export const MOCK_OPPORTUNITIES: Opportunity[] = [
     category: 'Animals',
     ageRequirement: '14+',
     location: 'North Charleston',
-    date: '2026-03-18T12:00:00-04:00', // Wednesday 12:00 PM EDT
+    date: '2026-04-22T12:00:00-04:00', // Wednesday 12:00 PM EDT
     timeCommitment: '12:00PM - 1:00PM',
     description: 'Assist with socializing cats, walking dogs, and helping keep animal enclosures clean. A perfect opportunity for teens who love animals and want to make a difference.',
     imageUrl: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800',
@@ -64,7 +64,7 @@ export const MOCK_OPPORTUNITIES: Opportunity[] = [
     category: 'Community',
     ageRequirement: '13+',
     location: 'Azalea Drive, Charleston',
-    date: '2026-03-24T15:30:00-04:00', // Tuesday 3:30 PM EST
+    date: '2026-04-28T15:30:00-04:00', // Tuesday 3:30 PM EDT
     timeCommitment: '3:30PM - 6:30PM',
     description: 'Fight hunger in the Lowcountry by helping sort, pack, and organize donated food items before they are distributed to local pantries and shelters.',
     imageUrl: 'https://images.unsplash.com/photo-1578357078586-491adf1aa5ba?auto=format&fit=crop&q=80&w=800',
