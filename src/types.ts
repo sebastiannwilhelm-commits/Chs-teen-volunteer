@@ -32,6 +32,7 @@ export interface UserProfile {
   completedHours: number;
   interests: string[];
   pastOrganizations: string[];
+  favorites: string[];
 }
 
 export interface Registration {

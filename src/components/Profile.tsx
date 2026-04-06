@@ -3,8 +3,9 @@ import { User } from 'firebase/auth';
 import { UserProfile } from '../types';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Award, Clock, Heart, Settings, Edit3 } from 'lucide-react';
+import { Award, Clock, Heart, Edit3, Bookmark } from 'lucide-react';
 import { motion } from 'motion/react';
+import { MOCK_OPPORTUNITIES } from '../mockData';
 
 interface ProfileProps {
   user: User | null;
@@ -122,41 +123,51 @@ export default function Profile({ user, profile, setProfile }: ProfileProps) {
               <h1 className="font-display text-3xl font-bold text-slate-900 mb-1">{profile.name}</h1>
               <p className="text-slate-500 mb-8">{profile.email}</p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                <div className="bg-brand-50 rounded-2xl p-6 border border-brand-100 flex items-center gap-4">
-                  <div className="bg-brand-100 p-3 rounded-xl text-brand-600">
-                    <Clock className="w-6 h-6" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div className="bg-brand-50 rounded-2xl p-5 border border-brand-100 flex items-center gap-3">
+                  <div className="bg-brand-100 p-2.5 rounded-xl text-brand-600 shrink-0">
+                    <Clock className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-brand-800">Total Hours</p>
+                    <p className="text-xs font-medium text-brand-800">Total Hours</p>
                     <p className="text-2xl font-bold text-brand-900">{profile.completedHours}</p>
                   </div>
                 </div>
-                
-                <div className="bg-cyan-50 rounded-2xl p-6 border border-cyan-100 flex items-center gap-4">
-                  <div className="bg-cyan-100 p-3 rounded-xl text-cyan-600">
-                    <Award className="w-6 h-6" />
+
+                <div className="bg-cyan-50 rounded-2xl p-5 border border-cyan-100 flex items-center gap-3">
+                  <div className="bg-cyan-100 p-2.5 rounded-xl text-cyan-600 shrink-0">
+                    <Award className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-cyan-800">Impact Level</p>
+                    <p className="text-xs font-medium text-cyan-800">Impact Level</p>
                     <p className="text-2xl font-bold text-cyan-900">
                       {profile.completedHours > 50 ? 'Gold' : profile.completedHours > 20 ? 'Silver' : 'Bronze'}
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-purple-50 rounded-2xl p-6 border border-purple-100 flex items-center gap-4">
-                  <div className="bg-purple-100 p-3 rounded-xl text-purple-600">
-                    <Heart className="w-6 h-6" />
+                <div className="bg-purple-50 rounded-2xl p-5 border border-purple-100 flex items-center gap-3">
+                  <div className="bg-purple-100 p-2.5 rounded-xl text-purple-600 shrink-0">
+                    <Heart className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-purple-800">Organizations</p>
+                    <p className="text-xs font-medium text-purple-800">Organizations</p>
                     <p className="text-2xl font-bold text-purple-900">{profile.pastOrganizations.length}</p>
+                  </div>
+                </div>
+
+                <div className="bg-red-50 rounded-2xl p-5 border border-red-100 flex items-center gap-3">
+                  <div className="bg-red-100 p-2.5 rounded-xl text-red-500 shrink-0">
+                    <Bookmark className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-red-700">Saved</p>
+                    <p className="text-2xl font-bold text-red-900">{(profile.favorites ?? []).length}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <div>
                   <h3 className="font-bold text-lg text-slate-900 mb-4">Your Interests</h3>
                   {profile.interests.length > 0 ? (
@@ -187,6 +198,34 @@ export default function Profile({ user, profile, setProfile }: ProfileProps) {
                     <p className="text-slate-500 text-sm">You haven't logged any volunteer hours yet. Find an opportunity and get started!</p>
                   )}
                 </div>
+              </div>
+
+              {/* Saved Opportunities */}
+              <div>
+                <h3 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-red-500 fill-current" />
+                  Saved Opportunities
+                </h3>
+                {(profile.favorites ?? []).length > 0 ? (() => {
+                  const favOpps = MOCK_OPPORTUNITIES.filter(o => (profile.favorites ?? []).includes(o.id));
+                  return favOpps.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {favOpps.map(opp => (
+                        <div key={opp.id} className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-4">
+                          <img src={opp.imageUrl} alt={opp.title} referrerPolicy="no-referrer" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                          <div className="min-w-0">
+                            <p className="font-semibold text-slate-900 text-sm truncate">{opp.title}</p>
+                            <p className="text-xs text-brand-600 truncate">{opp.organizationName}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-500 text-sm">Your saved opportunities will appear here.</p>
+                  );
+                })() : (
+                  <p className="text-slate-500 text-sm">No saved opportunities yet. Hit the heart button on any opportunity to save it!</p>
+                )}
               </div>
             </>
           )}

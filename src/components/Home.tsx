@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Clock, Users, Search, ChevronRight, Heart, Leaf, BookOpen, Calendar as CalendarIcon } from 'lucide-react';
-import { Category, Opportunity } from '../types';
+import { Category, Opportunity, UserProfile } from '../types';
 import { MOCK_OPPORTUNITIES } from '../mockData';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../firebase';
+import { User } from 'firebase/auth';
 import { format, parseISO } from 'date-fns';
 import { useSearchParams } from 'react-router-dom';
 import OpportunityModal from './OpportunityModal';
+
+interface HomeProps {
+  user: User | null;
+  profile: UserProfile | null;
+  setProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+}
 
 const CATEGORIES: Category[] = ['All', 'Environment', 'Community', 'Animals', 'Education'];
 
@@ -20,7 +27,7 @@ const getIconForCategory = (category: string) => {
   }
 };
 
-export default function Home() {
+export default function Home({ user, profile, setProfile }: HomeProps) {
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('org') || '');
@@ -42,6 +49,28 @@ export default function Home() {
     );
     return () => unsubscribe();
   }, []);
+
+  const favorites = profile?.favorites ?? [];
+
+  const toggleFavorite = async (e: React.MouseEvent, oppId: string) => {
+    e.stopPropagation();
+    if (!user || !profile) return;
+
+    const isFav = favorites.includes(oppId);
+    const userRef = doc(db, 'users', user.uid);
+
+    try {
+      if (isFav) {
+        await updateDoc(userRef, { favorites: arrayRemove(oppId) });
+        setProfile({ ...profile, favorites: favorites.filter(id => id !== oppId) });
+      } else {
+        await updateDoc(userRef, { favorites: arrayUnion(oppId) });
+        setProfile({ ...profile, favorites: [...favorites, oppId] });
+      }
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    }
+  };
 
   const filteredOpportunities = opportunities.filter((opp) => {
     const matchesCategory = activeCategory === 'All' || opp.category === activeCategory;
@@ -107,6 +136,7 @@ export default function Home() {
           <AnimatePresence mode="popLayout">
             {filteredOpportunities.map((opp) => {
               const Icon = getIconForCategory(opp.category);
+              const isFavorited = favorites.includes(opp.id);
               return (
                 <motion.div
                   key={opp.id}
@@ -123,6 +153,17 @@ export default function Home() {
                       <Icon className="w-3.5 h-3.5 text-brand-600" />
                       {opp.category}
                     </div>
+                    <button
+                      onClick={(e) => toggleFavorite(e, opp.id)}
+                      title={user ? (isFavorited ? 'Remove from favorites' : 'Save to favorites') : 'Sign in to save favorites'}
+                      className={`absolute top-4 right-4 p-2 rounded-full shadow-sm backdrop-blur-sm transition-all ${
+                        isFavorited
+                          ? 'bg-red-500 text-white hover:bg-red-600'
+                          : 'bg-white/90 text-slate-400 hover:text-red-500 hover:bg-white'
+                      }`}
+                    >
+                      <Heart className={`w-4 h-4 ${isFavorited ? 'fill-current' : ''}`} />
+                    </button>
                   </div>
                   <div className="p-6 flex flex-col flex-grow">
                     <div className="mb-4">

@@ -77,7 +77,8 @@ export default function App() {
             role: 'volunteer',
             completedHours: 0,
             interests: [],
-            pastOrganizations: []
+            pastOrganizations: [],
+            favorites: []
           };
           await setDoc(userRef, newProfile);
           setProfile(newProfile);
@@ -100,7 +101,7 @@ export default function App() {
         <Navbar user={user} profile={profile} />
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home user={user} profile={profile} setProfile={setProfile} />} />
             <Route path="/organizations" element={<Organizations />} />
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/profile" element={<Profile user={user} profile={profile} setProfile={setProfile} />} />
