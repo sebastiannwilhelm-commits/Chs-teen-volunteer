@@ -159,12 +159,22 @@ export default function App() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     // Handle redirect sign-in result when returning from Google OAuth
-    getRedirectResult(auth).catch((err) => {
-      console.error('Redirect result error:', err);
-    });
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) setAuthError(null);
+      })
+      .catch((err) => {
+        console.error('Redirect result error:', err);
+        if (err.code === 'auth/unauthorized-domain') {
+          setAuthError('This domain is not authorized in Firebase. Please add it under Firebase Console → Authentication → Settings → Authorized domains.');
+        } else if (err.code) {
+          setAuthError(`Sign-in failed: ${err.code}`);
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -222,6 +232,14 @@ export default function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
         <Navbar user={user} profile={profile} unreadCount={unreadCount} />
+
+        {authError && (
+          <div className="bg-red-50 border-b border-red-200 px-4 py-3 text-center text-sm text-red-700 flex items-center justify-center gap-3">
+            <span>{authError}</span>
+            <button onClick={() => setAuthError(null)} className="text-red-400 hover:text-red-600 font-bold text-lg leading-none">&times;</button>
+          </div>
+        )}
+
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home user={user} profile={profile} setProfile={setProfile} />} />

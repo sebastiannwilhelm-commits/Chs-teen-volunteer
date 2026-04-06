@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup, getRedirectResult, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
@@ -8,24 +8,13 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
+// Always use redirect-based sign-in — works reliably across all environments
+// (popups are blocked in many iframe/proxy setups like Replit's preview pane)
 export const signInWithGoogle = async () => {
   try {
-    // Try popup first; if it fails (e.g. inside an iframe), fall back to redirect
-    await signInWithPopup(auth, googleProvider);
-  } catch (error: any) {
-    if (
-      error.code === 'auth/popup-blocked' ||
-      error.code === 'auth/popup-closed-by-user' ||
-      error.code === 'auth/cancelled-popup-request'
-    ) {
-      try {
-        await signInWithRedirect(auth, googleProvider);
-      } catch (redirectError) {
-        console.error('Error signing in with redirect', redirectError);
-      }
-    } else {
-      console.error('Error signing in with Google', error);
-    }
+    await signInWithRedirect(auth, googleProvider);
+  } catch (error) {
+    console.error('Error initiating Google sign-in', error);
   }
 };
 
@@ -35,6 +24,6 @@ export const logOut = async () => {
   try {
     await signOut(auth);
   } catch (error) {
-    console.error("Error signing out", error);
+    console.error('Error signing out', error);
   }
 };
