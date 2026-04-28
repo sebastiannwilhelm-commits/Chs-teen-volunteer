@@ -1,13 +1,11 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, getRedirectResult, signOut } from 'firebase/auth';
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-// Enable offline persistence so Firestore serves from local cache when the
-// connection is slow or drops — prevents "client is offline" errors
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentMultipleTabManager()
@@ -25,13 +23,16 @@ export const isInIframe = () => {
   }
 };
 
-// Always use redirect — popup is blocked by Cross-Origin-Opener-Policy headers on the deployed site
-// The iframe case is handled in the Navbar (Sign In ↗ opens a new tab first)
+// Use popup — redirect is broken in modern Chrome (storage partitioning deprecation)
+// COOP headers are set to unsafe-none on the server so popups can communicate back
 export const signInWithGoogle = async () => {
   try {
-    await signInWithRedirect(auth, googleProvider);
-  } catch (error) {
-    console.error('Sign-in error:', error);
+    await signInWithPopup(auth, googleProvider);
+  } catch (error: any) {
+    if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+      console.error('Sign-in error:', error);
+      throw error;
+    }
   }
 };
 

@@ -20,6 +20,12 @@ export default defineConfig(({mode}) => {
       port: 5000,
       allowedHosts: true,
       hmr: false,
+      headers: {
+        // Required for signInWithPopup to work — prevents COOP from blocking
+        // the popup window from communicating back to the main page
+        'Cross-Origin-Opener-Policy': 'unsafe-none',
+        'Cross-Origin-Embedder-Policy': 'unsafe-none',
+      },
     },
   };
 });
